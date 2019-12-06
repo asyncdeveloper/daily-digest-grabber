@@ -14,12 +14,18 @@ const config = {
     waitUntil: 'networkidle0',
     viewPort:  {width: 1366, height: 738 },
 };
+
+const supportedDigests = {
+    'Quora Digest' : true
+};
+
 const CHROME_EXTENSION_PATH = process.env.CHROME_EXT_PATH;
 let $ = null;
 (async function main() {
     try {
         const browser = await puppeteer.launch({
             headless: false,
+            userDataDir: './user_data',
             executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
             args: [
                 `--disable-extensions-except=${CHROME_EXTENSION_PATH}`
@@ -32,17 +38,17 @@ let $ = null;
         await page.setBypassCSP(true);
 
         await page.goto(config.pageUrl, config.waitUntil);
-        const navigationPromise = page.waitForNavigation();
-        await page.waitForSelector('input[type="email"]');
-        await page.type('input[type="email"]', LOGIN_CREDENTIALS.username);
-        await page.click('#identifierNext');
-
-        await page.waitForSelector('input[type="password"]', { visible: true });
-        await page.type('input[type="password"]', LOGIN_CREDENTIALS.password);
-
-        await page.click('#passwordNext');
-
-        await navigationPromise;
+        // const navigationPromise = page.waitForNavigation();
+        // await page.waitForSelector('input[type="email"]');
+        // await page.type('input[type="email"]', LOGIN_CREDENTIALS.username);
+        // await page.click('#identifierNext');
+        //
+        // await page.waitForSelector('input[type="password"]', { visible: true });
+        // await page.type('input[type="password"]', LOGIN_CREDENTIALS.password);
+        //
+        // await page.click('#passwordNext');
+        //
+        // await navigationPromise;
 
         await page.waitForSelector("[aria-label='Social']", {
             visible: true,
@@ -61,9 +67,6 @@ let $ = null;
         socialTabData.each(async function(index, tr) {
             let data = {};
             $(tr).find('td').each (function(i, td) {
-                if(i==5) {
-                    data.title = $(td).find(".y2").text();
-                }
                 if(i==4) {
                     data.author = $(td).find("div:nth-child(2) > span > span").text();
                 }
@@ -73,7 +76,8 @@ let $ = null;
                 }
             });
             if(!data.isRead) {
-                unreadEmailsIndex.push(index);
+                if(supportedDigests[data.author]  === true )
+                    unreadEmailsIndex.push(index);
                 return false;
             }
         });
@@ -84,7 +88,6 @@ let $ = null;
         let mySelector = `.aDP > .aDM:nth-child(2) > div.Cp:nth-child(3) tbody > tr:nth-child(${randomItem})`;
 
         await page.evaluate((mySelector) => {
-            console.log(document.querySelector(mySelector));
             document.querySelector(mySelector).click()
         }, mySelector);
 
@@ -96,17 +99,25 @@ let $ = null;
 
         const pageSelector = '.ads.adn > div:nth-child(2) > div:nth-child(3) > div:nth-child(3) > div > div > div:nth-child(1) a[href*="https://www.quora.com/qemail/track_click?al_imp="]';
         let set = new Set();
-        $(pageSelector).each(function (index, item) {
+        $(pageSelector).each(async function (index, item) {
             const url = $(item).attr('href');
-            if(url.includes('QuestionLinkClickthrough'))
+            if(url.includes('QuestionLinkClickthrough')) {
+                await open_tab($(item).attr('href'), browser);
                 set.add($(item).attr('href'));
+            }
         });
         console.log(set, set.size);
     }
     catch(error) {
         console.error(error);
     }
-
 })();
+
+async function open_tab(url,browser ){
+    let  page  = await browser.newPage();
+    await page.setViewport(config.viewPort);
+    await page.setBypassCSP(true);
+    await page.goto(url);
+}
 
 
