@@ -24,7 +24,7 @@ cp .env.tmpl .env
 ##### Windows
 
 ```shell
-copy .env.example .env
+copy .env.tmpl .env
 ```
 
 ### Step Three - Update Environment file
