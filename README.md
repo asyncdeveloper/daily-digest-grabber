@@ -5,6 +5,7 @@ This tool allows the automation of reading your daily digest articles sent to yo
 ### Prerequisites
 
 * [Node.js](https://nodejs.org/en/download/) - JavaScript runtime
+* [Google Chrome](https://www.google.com/chrome/) - Web Browser
 
 ### Step One - Installation
 
