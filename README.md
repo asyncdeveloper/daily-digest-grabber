@@ -23,11 +23,13 @@ cp .env.tmpl .env
 ### Step Three - Update Environment file
 Update env file with Gmail Login Credentials and path to Chrome executable file
 
+```shell
 USERNAME = GMAILUSERNAME <br />
 PASSWORD = GMAILPASSWORD <br />
 CHROME_EXEC_PATH = PATH TO CHROME APP
+```
 
-### Step Four - 
+### Step Four - Run App
 
 ```shell
 node app.js
