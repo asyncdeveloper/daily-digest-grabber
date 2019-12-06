@@ -4,7 +4,6 @@
     "dependencies": {
         "cheerio": "^1.0.0-rc.3",
         "dotenv": "^8.2.0",
-        "puppeteer": "latest",
         "puppeteer-core": "^2.0.0"
     }
 }
