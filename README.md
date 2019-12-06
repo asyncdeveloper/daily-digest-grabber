@@ -16,9 +16,15 @@ npm install
 ```
 
 ### Step Two - Create Environment file
+##### UNIX
 
 ```shell
 cp .env.tmpl .env
+```
+##### Windows
+
+```shell
+copy .env.example .env
 ```
 
 ### Step Three - Update Environment file
