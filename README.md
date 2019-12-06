@@ -24,8 +24,8 @@ cp .env.tmpl .env
 Update env file with Gmail Login Credentials and path to Chrome executable file
 
 ```shell
-USERNAME = GMAILUSERNAME <br />
-PASSWORD = GMAILPASSWORD <br />
+USERNAME = GMAILUSERNAME
+PASSWORD = GMAILPASSWORD 
 CHROME_EXEC_PATH = PATH TO CHROME APP
 ```
 
